@@ -10,23 +10,14 @@
   <link rel="shortcut icon" href="favicon.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@600&display=swap" rel="stylesheet" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: 'Inter', sans-serif;
       color: #1A237E;
       background: #fff;
       line-height: 1.6;
     }
-
     header {
       background: rgba(144, 202, 249, 0.9);
       padding: 16px 40px 0;
@@ -39,6 +30,22 @@
       justify-content: space-between;
       align-items: center;
       backdrop-filter: blur(6px);
+    }
+    .logo img { height: 80px; }
+
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .menu-toggle span {
+      height: 3px;
+      width: 25px;
+      background: #1A237E;
+      margin: 4px 0;
+      border-radius: 2px;
+      transition: 0.4s;
     }
 
     nav ul {
@@ -56,10 +63,6 @@
 
     nav a:hover {
       color: #0D47A1;
-    }
-
-    .logo img {
-      height: 80px;
     }
 
     .hero {
@@ -140,28 +143,32 @@
       margin-bottom: 10px;
     }
 
-    @media (max-width: 600px) {
-      header {
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: flex;
+      }
+      nav {
+        display: none;
         flex-direction: column;
         align-items: flex-start;
+        width: 100%;
+        background: rgba(144, 202, 249, 0.98);
+        padding: 16px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 999;
       }
-
+      nav.active {
+        display: flex;
+      }
       nav ul {
         flex-direction: column;
         gap: 12px;
         margin-top: 10px;
       }
-
-      .hero h1 {
-        font-size: 2rem;
-      }
-
-      .hero p {
-        font-size: 1rem;
-      }
-
-      section {
-        padding: 60px 16px;
+      nav ul li {
+        width: 100%;
       }
     }
   </style>
