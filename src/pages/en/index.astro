@@ -1,0 +1,165 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import HeroSection from "../../components/react/HeroSection";
+import AboutSection from "../../components/react/AboutSection";
+import MissionVisionSection from "../../components/react/MissionVisionSection";
+import ProjectsSection from "../../components/react/ProjectsSection";
+import InitiativesSection from "../../components/react/InitiativesSection";
+import StatsSection from "../../components/react/StatsSection";
+import GetInvolvedSection from "../../components/react/GetInvolvedSection";
+
+// Get home page content from markdown
+const allPages = await getCollection("pages");
+const lang = "en";
+const homePageEntry =
+  allPages.find(
+    (page) =>
+      page.data.pageType === "home" &&
+      (page.data.lang ? page.data.lang === lang : true)
+  ) || allPages.find((page) => page.data.pageType === "home");
+
+if (!homePageEntry) {
+  console.error(
+    "Available pages:",
+    allPages.map((p) => ({ id: p.id, slug: p.slug, pageType: p.data.pageType }))
+  );
+  throw new Error(
+    "Home page not found. Please ensure localized home content exists and has pageType: home in frontmatter."
+  );
+}
+
+const homePage = homePageEntry;
+
+// Extract required values for type safety
+const heroTitle = homePage.data.heroTitle;
+const heroSubtitle = homePage.data.heroSubtitle;
+---
+
+<Layout currentPath="/en" lang={lang}>
+  <main>
+    <!-- Hero Section -->
+    {
+      heroTitle && (
+        <HeroSection
+          client:load
+          title={heroTitle}
+          subtitle={heroSubtitle}
+          images={homePage.data.heroImages}
+          button1Text={homePage.data.heroButton1Text}
+          button1Link={homePage.data.heroButton1Link}
+          button2Text={homePage.data.heroButton2Text}
+          button2Link={homePage.data.heroButton2Link}
+        />
+      )
+    }
+
+    <!-- About Section -->
+    {
+      (homePage.data.aboutTitle || homePage.data.aboutContent) && (
+        <AboutSection
+          client:load
+          title={homePage.data.aboutTitle}
+          content={homePage.data.aboutContent}
+          image={homePage.data.aboutImage}
+        />
+      )
+    }
+
+    <!-- Mission & Vision Section -->
+    {
+      (homePage.data.missionTitle ||
+        homePage.data.missionContent ||
+        homePage.data.visionTitle ||
+        homePage.data.visionContent) && (
+        <MissionVisionSection
+          client:load
+          mission={
+            homePage.data.missionTitle || homePage.data.missionContent
+              ? {
+                  title: homePage.data.missionTitle,
+                  content: homePage.data.missionContent,
+                }
+              : undefined
+          }
+          vision={
+            homePage.data.visionTitle || homePage.data.visionContent
+              ? {
+                  title: homePage.data.visionTitle,
+                  content: homePage.data.visionContent,
+                }
+              : undefined
+          }
+          missionImage={homePage.data.missionImage}
+          visionImage={homePage.data.visionImage}
+        />
+      )
+    }
+
+    <!-- Statistics Section -->
+    {
+      homePage.data.stats && (
+        <StatsSection
+          client:load
+          stats={homePage.data.stats.map((stat) => ({
+            number: stat.number.toString(),
+            label: stat.label,
+          }))}
+          backgroundImage={homePage.data.statsBackgroundImage}
+        />
+      )
+    }
+
+    <!-- Projects Section -->
+    {
+      homePage.data.projectsTitle && (
+        <ProjectsSection
+          client:load
+          title={homePage.data.projectsTitle}
+          subtitle={homePage.data.projectsSubtitle}
+          projects={homePage.data.projects || []}
+        />
+      )
+    }
+
+    <!-- Initiatives Section -->
+    {
+      homePage.data.initiatives && homePage.data.initiatives.length > 0 && (
+        <InitiativesSection
+          client:load
+          title={homePage.data.initiativesTitle}
+          subtitle={homePage.data.initiativesSubtitle}
+          initiatives={homePage.data.initiatives.map((initiative, index) => ({
+            id: index + 1,
+            title: initiative.title,
+            location: initiative.location,
+            date: initiative.date,
+            imageUrl: initiative.imageUrl,
+          }))}
+        />
+      )
+    }
+
+    <!-- Get Involved Section -->
+    {
+      homePage.data.getInvolvedTitle && (
+        <section id="get-involved">
+          <GetInvolvedSection
+            client:load
+            title={homePage.data.getInvolvedTitle}
+            subtitle={homePage.data.getInvolvedSubtitle}
+            waysTitle={homePage.data.getInvolvedWaysTitle}
+            ways={homePage.data.getInvolvedWays}
+            message={homePage.data.getInvolvedMessage}
+            contactUsTitle={homePage.data.contactUsTitle}
+            contactEmail={homePage.data.contactEmail}
+            contactPhone={homePage.data.contactPhone}
+            buttonText={homePage.data.donationButtonText}
+            buttonLink={homePage.data.donationButtonLink}
+          />
+        </section>
+      )
+    }
+  </main>
+</Layout>
+

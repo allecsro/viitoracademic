@@ -1,0 +1,121 @@
+---
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import ScrollToTop from "../components/react/ScrollToTop";
+import "../styles/global.css";
+import { getCollection } from "astro:content";
+
+interface Props {
+  currentPath?: string;
+  lang?: "ro" | "en";
+}
+
+const { currentPath = Astro.url.pathname, lang = "ro" } = Astro.props;
+
+// Fetch SEO metadata from TinaCMS (data managed entirely through CMS)
+const allPages = await getCollection("pages");
+const seoPageEntry = allPages.find((page) => page.data.pageType === "seo");
+
+if (!seoPageEntry) {
+  throw new Error(
+    "SEO metadata not found. Please ensure src/content/pages/seo.md exists and has pageType: seo in frontmatter."
+  );
+}
+
+const seoData = seoPageEntry.data;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Favicons for all devices -->
+    <link rel="icon" type="image/x-icon" href={seoData.faviconIco} />
+    <link rel="icon" type="image/png" sizes="16x16" href={seoData.favicon16} />
+    <link rel="icon" type="image/png" sizes="32x32" href={seoData.favicon32} />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href={seoData.favicon192}
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href={seoData.favicon512}
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href={seoData.appleTouchIcon}
+    />
+
+    <!-- Google Fonts: Poppins and Roboto (Optimized for Performance) -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Async font loading to prevent render blocking -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta Tags -->
+    <title>{seoData.title}</title>
+    <meta name="title" content={seoData.metaTitle || seoData.title} />
+    <meta name="description" content={seoData.metaDescription} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={seoData.ogType} />
+    <meta property="og:url" content={seoData.ogUrl} />
+    <meta property="og:title" content={seoData.ogTitle || seoData.title} />
+    <meta
+      property="og:description"
+      content={seoData.ogDescription || seoData.metaDescription}
+    />
+    <meta property="og:image" content={seoData.ogImage} />
+
+    <!-- X (Twitter) -->
+    <meta property="twitter:card" content={seoData.twitterCard} />
+    <meta
+      property="twitter:url"
+      content={seoData.twitterUrl || seoData.ogUrl}
+    />
+    <meta
+      property="twitter:title"
+      content={seoData.twitterTitle || seoData.ogTitle || seoData.title}
+    />
+    <meta
+      property="twitter:description"
+      content={seoData.twitterDescription ||
+        seoData.ogDescription ||
+        seoData.metaDescription}
+    />
+    <meta
+      property="twitter:image"
+      content={seoData.twitterImage || seoData.ogImage}
+    />
+  </head>
+  <body class="flex flex-col min-h-screen overflow-x-hidden w-full max-w-full">
+    <Navbar currentPath={currentPath} lang={lang} />
+    <div class="pt-16 grow w-full max-w-full">
+      <slot />
+    </div>
+    <Footer lang={lang} />
+    <ScrollToTop client:load />
+  </body>
+</html>

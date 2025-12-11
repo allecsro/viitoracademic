@@ -1,0 +1,371 @@
+---
+// Navbar component with TypeScript support
+import { getCollection } from "astro:content";
+import LanguageSwitcher from "./react/LanguageSwitcher";
+import MobileMenu from "./MobileMenu.astro";
+
+interface Props {
+  currentPath?: string;
+  lang?: "ro" | "en";
+}
+
+const { currentPath = "/", lang = "ro" } = Astro.props;
+
+// Fetch header and footer content from markdown (localized)
+const allPages = await getCollection("pages");
+const headerContent =
+  allPages.find(
+    (page) =>
+      page.data.pageType === "header" &&
+      (page.data.lang ? page.data.lang === lang : true)
+  ) || allPages.find((page) => page.data.pageType === "header");
+const footerContent =
+  allPages.find(
+    (page) =>
+      page.data.pageType === "footer" &&
+      (page.data.lang ? page.data.lang === lang : true)
+  ) || allPages.find((page) => page.data.pageType === "footer");
+
+if (!headerContent) {
+  throw new Error(
+    "Header content not found. Please ensure localized header content exists in src/content/pages/"
+  );
+}
+
+// Use content from markdown only - no fallbacks
+const logoImage = headerContent.data.headerLogoImage;
+const heroSectionLogo = headerContent.data.heroSectionLogo;
+const navItems = headerContent.data.navItems || [];
+const logoText = headerContent.data.logoText;
+const logoTextParts = logoText ? logoText.split(" ") : [];
+const logoTextFirst = logoTextParts[0] || "";
+const logoTextSecond = logoTextParts.slice(1).join(" ") || "";
+
+// Mobile hamburger logo: use mobileHamburgerLogo from header, or fallback to footer logo
+const mobileHamburgerLogo =
+  headerContent.data.mobileHamburgerLogo || footerContent?.data.footerLogoImage;
+
+const normalizedPath =
+  currentPath === "/"
+    ? "/"
+    : currentPath?.endsWith("/") && currentPath !== "/"
+      ? currentPath.slice(0, -1)
+      : currentPath;
+const isCurrentPageHome = normalizedPath === "/" || normalizedPath === "/en";
+---
+
+<nav
+  id="main-navbar"
+  class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-md transition-all duration-300 w-full max-w-full overflow-x-hidden"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center py-2 gap-4">
+      <!-- Logo -->
+      <div class="shrink-0">
+        <a href="/" class="flex items-center transition-opacity">
+          <div class="logo-stack flex items-center">
+            <img
+              src={heroSectionLogo || logoImage}
+              alt="VIITOR ACADEMIC Logo"
+              id="navbar-logo-hero"
+              class="navbar-logo-img logo-hero h-14 md:h-16 w-auto object-contain transition-all duration-300"
+              loading="lazy"
+            />
+            <img
+              src={logoImage}
+              alt="VIITOR ACADEMIC Logo"
+              id="navbar-logo-default"
+              class="navbar-logo-img logo-default h-14 md:h-16 w-auto object-contain transition-all duration-300"
+              loading="lazy"
+            />
+          </div>
+          {
+            (logoTextFirst || logoTextSecond) && (
+              <div class="logo-text-hero ml-3 leading-tight font-bold text-white">
+                {logoTextFirst && (
+                  <span class="block text-lg md:text-xl">{logoTextFirst}</span>
+                )}
+                {logoTextSecond && (
+                  <span class="block text-lg md:text-xl">{logoTextSecond}</span>
+                )}
+              </div>
+            )
+          }
+        </a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden min-[900px]:flex min-[900px]:space-x-5 items-center">
+        {
+          navItems.map((item: { name: string; path: string }) => {
+            const isHomeLink = item.path === "/" || item.path === "/en";
+            const sectionId = isHomeLink ? "hero" : item.path.replace("#", "");
+            const isActive = item.path.startsWith("#")
+              ? isCurrentPageHome
+              : normalizedPath === item.path ||
+                (isHomeLink && isCurrentPageHome);
+            return (
+              <a
+                href={item.path}
+                data-section={sectionId}
+                class={`nav-item nav-link-transition px-3 py-2 text-sm font-medium transition-colors ${
+                  isActive ? "nav-active" : ""
+                }`}
+              >
+                {item.name}
+              </a>
+            );
+          })
+        }
+      </div>
+
+      <!-- Desktop Right Actions -->
+      <div class="hidden min-[900px]:flex items-center gap-2">
+        <LanguageSwitcher client:load lang={lang} currentPath={currentPath} />
+      </div>
+
+      <!-- Mobile menu button (only below 900px) -->
+      <div
+        class="min-[900px]:hidden relative"
+        style="z-index: 100000; position: relative;"
+      >
+        <button
+          id="mobile-menu-button"
+          class="mobile-menu-button-transition text-accent-blue hover:text-medium-blue focus:outline-none transition-all duration-300 relative"
+          aria-label="Toggle menu"
+          aria-expanded="false"
+          style="z-index: 100000; position: relative;"
+        >
+          <svg
+            id="menu-icon"
+            class="h-7 w-7 transition-transform duration-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <path
+              id="menu-line-1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4 6h16"></path>
+            <path
+              id="menu-line-2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4 12h16"></path>
+            <path
+              id="menu-line-3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4 18h16"></path>
+          </svg>
+          <svg
+            id="close-icon"
+            class="h-7 w-7 transition-transform duration-300 hidden"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<MobileMenu
+  lang={lang}
+  currentPath={currentPath}
+  mobileHamburgerLogo={mobileHamburgerLogo}
+  logoTextFirst={logoTextFirst}
+  logoTextSecond={logoTextSecond}
+  navItems={navItems}
+  normalizedPath={normalizedPath}
+  isCurrentPageHome={isCurrentPageHome}
+/>
+
+<script src="../scripts/navbar.ts"></script>
+
+<style>
+  nav {
+    border-bottom: 2px solid var(--color-sky-blue);
+  }
+
+  /* Transparent navbar styles */
+  nav.bg-transparent {
+    border-bottom: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: transparent !important;
+  }
+
+  /* Low-opacity background for hero section navbar */
+  nav.navbar-hero-bg {
+    background: rgba(17, 56, 94, 0.25) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Ensure nav links are visible when transparent */
+  nav.bg-transparent .nav-link-transition {
+    color: rgba(255, 255, 255, 0.95) !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  /* Hero section navbar - Active state: white text with primary underline */
+  nav.navbar-hero-bg .nav-item.nav-link-transition.nav-active,
+  nav.navbar-hero-bg .nav-link-transition.nav-active {
+    color: white !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    opacity: 1 !important;
+  }
+
+  nav.navbar-hero-bg .nav-link-transition.nav-active::after {
+    background-color: var(--color-primary) !important;
+    box-shadow: 0 2px 6px rgba(17, 56, 94, 0.5);
+    height: 3px;
+  }
+
+  /* Hero section navbar - Hover state: white text (stay same) with underline only */
+  nav.navbar-hero-bg .nav-link-transition:hover {
+    color: white !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transform: translateY(-1px);
+    opacity: 1 !important;
+  }
+
+  nav.navbar-hero-bg .nav-link-transition:hover::after {
+    background-color: var(--color-primary) !important;
+    box-shadow: 0 2px 6px rgba(17, 56, 94, 0.5);
+    height: 3px;
+  }
+
+  /* Default transparent navbar (not hero section) - keep existing behavior */
+  nav.bg-transparent:not(.navbar-hero-bg) .nav-link-transition:hover {
+    color: var(--color-accent) !important;
+    text-shadow:
+      0 2px 8px rgba(84, 145, 195, 0.6),
+      0 4px 12px rgba(84, 145, 195, 0.4);
+    transform: translateY(-1px);
+    opacity: 1 !important;
+  }
+
+  nav.bg-transparent:not(.navbar-hero-bg) .nav-link-transition.nav-active {
+    color: var(--color-accent) !important;
+    text-shadow:
+      0 2px 8px rgba(84, 145, 195, 0.6),
+      0 4px 12px rgba(84, 145, 195, 0.4);
+    opacity: 1 !important;
+  }
+
+  nav.bg-transparent:not(.navbar-hero-bg)
+    .nav-link-transition.nav-active::after {
+    background-color: var(--color-accent) !important;
+    box-shadow: 0 2px 6px rgba(84, 145, 195, 0.5);
+    height: 3px;
+  }
+
+  nav.bg-transparent:not(.navbar-hero-bg) .nav-link-transition:hover::after {
+    background-color: var(--color-accent) !important;
+    box-shadow: 0 2px 6px rgba(84, 145, 195, 0.5);
+    height: 3px;
+  }
+
+  /* Mobile menu button styling for transparent navbar */
+  nav.bg-transparent .mobile-menu-button-transition {
+    color: white !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  nav.bg-transparent .mobile-menu-button-transition:hover {
+    color: var(--color-accent) !important;
+    text-shadow:
+      0 2px 8px rgba(84, 145, 195, 0.6),
+      0 4px 12px rgba(84, 145, 195, 0.4);
+    transform: scale(1.1);
+    opacity: 1 !important;
+  }
+
+  /* Language Label Text Coloring - Desktop Only */
+  /* We use :global() because LanguageSwitcher is a React component and Astro scopes styles by default */
+  
+  /* Hero State: White Text */
+  nav.navbar-hero-bg :global(.lang-label) {
+    color: #FFFFFF !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Sticky/Scrolled State: Black Text */
+  nav:not(.navbar-hero-bg) :global(.lang-label) {
+    color: #000000 !important;
+    text-shadow: none !important;
+  }
+
+  /* Hamburger Icon Animation */
+  #mobile-menu-button:active {
+    transform: scale(0.95);
+  }
+
+  /* Smooth transitions for menu icons */
+  #menu-icon,
+  #close-icon {
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  /* Hero logo text: shown only in hero, hidden by default */
+  .logo-text-hero {
+    display: none;
+  }
+
+  .logo-stack {
+    position: relative;
+  }
+
+  .navbar-logo-img {
+    display: none;
+  }
+
+  /* Show hero logo in hero state */
+  nav.navbar-hero-bg .logo-hero {
+    display: block;
+  }
+
+  /* Show default logo outside hero */
+  nav:not(.navbar-hero-bg) .logo-default {
+    display: block;
+  }
+
+  nav.show-hero-text .logo-text-hero {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Hide hero logo text between 900px and 1150px */
+  @media (min-width: 900px) and (max-width: 1150px) {
+    nav.show-hero-text .logo-text-hero {
+      display: none;
+    }
+  }
+
+  /* Ensure navbar doesn't interfere with mobile menu */
+  @media (max-width: 899px) {
+    nav#main-navbar {
+      z-index: 50 !important;
+    }
+
+    /* Override navbar z-index when menu is open */
+    body.mobile-menu-open nav#main-navbar {
+      z-index: 50 !important;
+    }
+  }
+</style>

@@ -1,0 +1,212 @@
+---
+import LanguageSwitcher from "./react/LanguageSwitcher";
+
+interface Props {
+  lang?: "ro" | "en";
+  currentPath: string;
+  mobileHamburgerLogo?: string;
+  logoTextFirst: string;
+  logoTextSecond: string;
+  navItems: { name: string; path: string }[];
+  normalizedPath: string;
+  isCurrentPageHome: boolean;
+}
+
+const {
+  lang = "ro",
+  currentPath,
+  mobileHamburgerLogo,
+  logoTextFirst,
+  logoTextSecond,
+  navItems,
+  normalizedPath,
+  isCurrentPageHome,
+} = Astro.props;
+---
+
+<!-- Mobile Navigation Overlay (only below 900px) - Outside navbar to avoid stacking context issues -->
+<div
+  id="mobile-menu-overlay"
+  class="min-[900px]:hidden fixed inset-0 pointer-events-none"
+  style="z-index: 99999;"
+>
+  <!-- Backdrop -->
+  <div
+    id="mobile-menu-backdrop"
+    class="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300 pointer-events-none"
+    style="z-index: 99998;"
+  >
+  </div>
+
+  <!-- Menu Panel -->
+  <div
+    id="mobile-menu-panel"
+    class="absolute top-0 right-0 h-full w-80 max-w-[85vw] bg-primary-blue shadow-2xl transform translate-x-full transition-transform duration-300 ease-out pointer-events-auto overflow-y-auto"
+    style="z-index: 99999; border: none; border-left: none; border-right: none;"
+  >
+    <div class="flex flex-col h-full">
+      <!-- Logo and Brand Section -->
+      <div class="px-6 pt-8 pb-6">
+        <a
+          href="/"
+          class="flex items-center space-x-3 transition-opacity hover:opacity-90 group"
+        >
+          {
+            mobileHamburgerLogo && (
+              <img
+                src={mobileHamburgerLogo}
+                alt="VIITOR ACADEMIC Logo"
+                class="h-14 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+              />
+            )
+          }
+          <div class="flex flex-col">
+            {
+              (logoTextFirst || logoTextSecond) && (
+                <div class="ml-3 leading-tight text-[25px] font-bold text-white">
+                  {logoTextFirst && <span class="block">{logoTextFirst}</span>}
+                  {logoTextSecond && (
+                    <span class="block">{logoTextSecond}</span>
+                  )}
+                </div>
+              )
+            }
+          </div>
+        </a>
+
+        <!-- Navigation Links -->
+        <nav class="flex-1 px-4 py-6">
+          <div class="flex flex-col space-y-2">
+            {
+              navItems.map(
+                (item: { name: string; path: string }, index: number) => {
+                  const isHomeLink = item.path === "/" || item.path === "/en";
+                  const sectionId = isHomeLink
+                    ? "hero"
+                    : item.path.replace("#", "");
+                  const isActive = item.path.startsWith("#")
+                    ? isCurrentPageHome
+                    : normalizedPath === item.path ||
+                      (isHomeLink && isCurrentPageHome);
+                  return (
+                    <a
+                      href={item.path}
+                      data-section={sectionId}
+                      data-menu-index={index}
+                      class={`mobile-nav-item px-5 py-4 text-base font-semibold rounded-xl transition-all duration-200 transform translate-x-4 opacity-0 ${
+                        isActive
+                          ? "bg-white text-primary-blue shadow-lg shadow-black/20 scale-[1.02]"
+                          : "text-white hover:bg-white/15 hover:text-white hover:shadow-md"
+                      }`}
+                      style={`transition-delay: ${index * 50}ms`}
+                    >
+                      <span class="relative z-10">{item.name}</span>
+                    </a>
+                  );
+                }
+              )
+            }
+          </div>
+        </nav>
+
+        <!-- Mobile Language Switcher -->
+        <div class="px-4">
+          <div class="h-px bg-white/20 w-full mb-6"></div>
+          <h3 class="text-white text-center text-md font-bold mb-4">
+            Languages
+          </h3>
+          <div class="flex justify-center">
+            <LanguageSwitcher
+              client:load
+              lang={lang}
+              currentPath={currentPath}
+              variant="mobile"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Mobile Menu Overlay Styles */
+  #mobile-menu-overlay {
+    transition: all 0.3s ease;
+  }
+
+  #mobile-menu-backdrop {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  #mobile-menu-panel {
+    will-change: transform;
+  }
+
+  /* Mobile Nav Items Animation */
+  .mobile-nav-item {
+    will-change: transform, opacity;
+  }
+
+  /* Active state for mobile nav items */
+  .mobile-nav-item:active {
+    transform: scale(0.98);
+  }
+
+  /* Ensure menu panel has proper z-index - highest priority */
+  @media (max-width: 899px) {
+    /* Mobile menu overlay - must be highest */
+    #mobile-menu-overlay {
+      z-index: 99999 !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+    }
+
+    #mobile-menu-panel {
+      z-index: 99999 !important;
+      position: absolute !important;
+    }
+
+    #mobile-menu-backdrop {
+      z-index: 99998 !important;
+      position: absolute !important;
+    }
+
+    /* When menu is open, ensure all content is below */
+    body.mobile-menu-open {
+      overflow: hidden;
+    }
+  }
+
+  /* Ensure mobile menu appears above everything - highest priority */
+  #mobile-menu-overlay {
+    z-index: 99999 !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    isolation: isolate;
+  }
+
+  #mobile-menu-panel {
+    z-index: 99999 !important;
+    position: absolute !important;
+  }
+
+  #mobile-menu-backdrop {
+    z-index: 99998 !important;
+    position: absolute !important;
+  }
+
+  /* Global rule: Mobile menu must be above all sections and content */
+  @media (max-width: 899px) {
+    #mobile-menu-overlay {
+      z-index: 99999 !important;
+    }
+  }
+</style>
