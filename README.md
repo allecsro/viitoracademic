@@ -1,158 +1,117 @@
 # Viitor Academic Website
 
-A modern academic website built with [Astro.js](https://astro.build) and [Tina CMS](https://tina.io) for content management.
+A modern, high-performance academic website built with [Astro](https://astro.build) and [TinaCMS](https://tina.io). This project leverages the power of static site generation for speed and SEO, while providing a user-friendly content management system for easy updates.
 
-## 🚀 Features
+## 🚀 Tech Stack
 
-- **Astro.js** - Fast, modern static site generator
-- **Tina CMS** - Visual content management system
-- **TypeScript** - Type-safe development
-- **Content Collections** - Organized content structure
-- **Markdown Support** - Easy content authoring
+- **Framework:** [Astro v5](https://astro.build) - Content-focused web framework.
+- **CMS:** [TinaCMS](https://tina.io) - Git-backed headless CMS.
+- **UI Library:** [React v19](https://react.dev) - For interactive components.
+- **Styling:** [Tailwind CSS v4](https://tailwindcss.com) - Utility-first CSS framework (via `@tailwindcss/vite`).
+- **Animations:** [Framer Motion](https://www.framer.com/motion/) - Production-ready animation library.
+- **Icons:** [Lucide React](https://lucide.dev) - Beautiful & consistent icons.
+- **Carousel:** [Embla Carousel](https://www.embla-carousel.com) - Lightweight carousel library.
+- **Deployment:** [GitHub Pages](https://pages.github.com) - Hosting via GitHub Actions.
 
-## 📋 Prerequisites
+## � Project Structure
 
-- Node.js (v18 or higher)
-- npm or yarn
+```bash
+vittor-academic-main/
+├── .github/workflows/   # GitHub Actions (CI/CD)
+│   └── static.yml       # Deployment workflow for GitHub Pages
+├── .tina/               # TinaCMS Configuration
+│   └── config.ts        # Content schema definition (Collections, Fields)
+├── public/              # Static assets (images, favicons)
+├── src/
+│   ├── assets/          # Source assets (processed by Vite)
+│   ├── components/      # Reusable React & Astro components
+│   ├── content/         # Content collections (managed by TinaCMS)
+│   ├── layouts/         # Page layouts
+│   └── pages/           # Astro pages (routing)
+├── astro.config.mjs     # Astro configuration
+├── package.json         # Project dependencies & scripts
+└── tailwind.config.mjs  # Tailwind CSS configuration
+```
 
-## 🛠️ Setup Instructions
+## 🛠️ Prerequisites
 
-### 1. Install Dependencies
+Ensure you have the following installed on your machine:
+
+- **Node.js**: v20 or higher (v22+ recommended).
+- **npm**: Comes with Node.js.
+
+## 🏁 Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd vittor-academic-main
+```
+
+### 2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-**Note:** If you encounter issues with `better-sqlite3` requiring Python, you can install with:
+_Tip: If you encounter errors related to `better-sqlite3`, try running `npm install --ignore-scripts`._
 
-```bash
-npm install --ignore-scripts
-```
+### 3. Run Development Server
 
-For production use, you may need to install Python and build tools. See [Tina CMS documentation](https://tina.io/docs) for more details.
-
-### 2. Start Development Server
+To start both the Astro dev server and the TinaCMS server concurrently:
 
 ```bash
 npm run dev
 ```
 
-This will start both Astro and Tina CMS development servers.
+- **Website:** [http://localhost:3000](http://localhost:3000)
+- **CMS Admin:** [http://localhost:3000/admin/index.html](http://localhost:3000/admin/index.html) (or port 3001 depending on output)
 
-**Note:** If you encounter errors with Node.js v24+, the CLI has been updated to handle compatibility issues. If problems persist, you can run Astro and Tina separately:
-- `npm run dev:astro` - Run only Astro
-- `npm run dev:tina` - Run only Tina CMS
+### Other Scripts
 
-### 3. Access the Application
+| Command              | Description                                         |
+| :------------------- | :-------------------------------------------------- |
+| `npm run dev:astro`  | Run only the Astro development server.              |
+| `npm run dev:tina`   | Run only the TinaCMS development server.            |
+| `npm run build`      | Build the project for production (TinaCMS + Astro). |
+| `npm run build:site` | Build only the Astro site (used in CI/CD).          |
+| `npm run preview`    | Preview the production build locally.               |
+| `npm run lint`       | Run ESLint to check for code issues.                |
 
-- **Website**: http://localhost:4321
-- **Tina CMS Admin**: http://localhost:4321/admin/index.html
+## 📝 Content Management (TinaCMS)
 
-## 📁 Project Structure
+The website content is managed via TinaCMS. To edit content:
 
-```
-/
-├── .tina/                 # Tina CMS configuration
-│   └── config.ts          # Content schema and CMS settings
-├── content/               # Content files (managed by Tina CMS)
-│   ├── posts/            # Blog posts
-│   └── pages/            # Static pages
-├── public/               # Static assets
-├── src/
-│   ├── content/         # Content collection schemas
-│   │   └── config.ts
-│   ├── layouts/         # Page layouts
-│   ├── pages/           # Astro pages
-│   │   ├── index.astro  # Homepage
-│   │   ├── posts/       # Blog post pages
-│   │   └── pages/       # Static page routes
-│   └── components/      # Reusable components
-└── package.json
-```
+1.  Run the development server (`npm run dev`).
+2.  Navigate to `http://localhost:3001/admin/index.html` in your browser.
+3.  Enter the editing mode to modify:
+    - **Home Page:** Hero section, About, Mission/Vision, Projects, Initiatives, Stats.
+    - **Constant Pages:** Header (Logo, Nav items) and Footer (Links, Contact info).
+    - **SEO Metadata:** Global SEO settings, Open Graph tags, and Favicons.
 
-## 📝 Content Management
-
-### Using Tina CMS Admin
-
-1. Navigate to http://localhost:4321/admin/index.html
-2. You'll see collections for "Posts" and "Pages"
-3. Click on any collection to view, edit, or create content
-4. Changes are saved directly to your markdown files
-
-### Content Collections
-
-#### Posts
-Located in `content/posts/`, posts support:
-- Title
-- Description
-- Date
-- Author
-- Hero Image
-- Rich text body
-
-#### Pages
-Located in `content/pages/`, pages support:
-- Title
-- Description
-- Rich text body
-
-### Manual Content Editing
-
-You can also edit content files directly in the `content/` directory. Files are in Markdown format with frontmatter.
-
-## ⚙️ Configuration
-
-### Tina CMS Configuration
-
-Edit `.tina/config.ts` to:
-- Customize content collections
-- Add new fields
-- Configure media storage
-- Set up authentication (for production)
-
-### Astro Configuration
-
-Edit `astro.config.mjs` to:
-- Add integrations
-- Configure build options
-- Set up deployment settings
+Configuration for content models can be found in `.tina/config.ts`.
 
 ## 🚢 Deployment
 
-### Build for Production
+The project is configured to perform a static export and deploy to **GitHub Pages** automatically.
 
-```bash
-npm run build
-```
+**Workflow:** `.github/workflows/static.yml`
+**Trigger:** Pushes to the `revamp` branch.
 
-This creates a `dist/` folder with your static site.
+To deploy manually or update the live site:
 
-### Preview Production Build
+1.  Ensure your code is committed.
+2.  Push changes to the `revamp` branch:
+    ```bash
+    git push origin revamp
+    ```
+3.  Monitor the "Actions" tab in your GitHub repository for the build status.
 
-```bash
-npm run preview
-```
+## 🤝 Contributing
 
-### Deploy to Production
-
-For production deployment with Tina CMS:
-
-1. Set up Tina Cloud or self-host the Tina Data Layer
-2. Configure `clientId` and `token` in `.tina/config.ts`
-3. Deploy your site to your hosting provider (Vercel, Netlify, etc.)
-
-See [Tina CMS Deployment Guide](https://tina.io/docs/frameworks/astro) for detailed instructions.
-
-## 📚 Available Scripts
-
-| Command                | Action                                           |
-| :--------------------- | :----------------------------------------------- |
-| `npm install`          | Installs dependencies                            |
-| `npm run dev`          | Starts dev server with Tina CMS                  |
-| `npm run build`        | Builds production site to `./dist/`              |
-| `npm run preview`      | Preview production build locally                  |
-| `npm run astro ...`    | Run Astro CLI commands                           |
-
----
-
-Built with ❤️ using Astro.js and Tina CMS
+1.  Fork the repository.
+2.  Create a feature branch (`git checkout -b feature/AmazingFeature`).
+3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4.  Push to the branch (`git push origin feature/AmazingFeature`).
+5.  Open a Pull Request.
