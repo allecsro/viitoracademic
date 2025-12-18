@@ -1,7 +1,7 @@
 ---
 pageType: home
 lang: en
-title: VIITOR ACADEMIC
+title: VIITOR ACADEMIC - We support young people to reach their academic potential
 description: We support young people to reach their academic potential
 heroTitle: VIITOR ACADEMIC
 heroSubtitle: We support young people to reach their academic potential
@@ -22,21 +22,21 @@ aboutContent: >-
   financial support to continue their higher education. We believe in the
   potential of every young person and work to transform it into real
   opportunities for academic and professional development.
-aboutImage: /Images/Hero%20section/HS-2.webp
+aboutImage: /Images/About-Mission-Vison%20Section/AS.webp
 missionTitle: Mission
 missionContent: >-
   VIITOR ACADEMIC aims to eliminate barriers that limit access to higher
   education. Through educational programs, counseling, scholarships, and active
   support, we help talented young people discover their vocation, continue their
   educational path, and successfully integrate into the labor market.
-missionImage: /Images/Hero%20section/HS-3.webp
+missionImage: /Images/About-Mission-Vison%20Section/MS.webp
 visionTitle: Vision
 visionContent: >-
   We dream of a society where every young person, regardless of their
   background, has the chance to study, dream, and develop. We believe in
   equitable education, accessible to all, and in an academic future where
   talent, not social situation, defines a student's path.
-visionImage: /Images/Hero%20section/HS-1.webp
+visionImage: /Images/About-Mission-Vison%20Section/VS.webp
 projectsTitle: Our Projects
 projectsSubtitle: Comprehensive programs designed to support and empower young students
 projects:
@@ -67,6 +67,12 @@ initiatives:
     location: '"Liceul Tehnologic Liviu Rebreanu" from Mozaceni, Arges'
     date: 'December 05, 2025'
     imageUrl: /Images/Initiatives%20section/IS-1.webp
+  - title: >-
+      Granting of "Viitor Academic" scholarship for academic result to 11
+      students
+    location: '"Liceul Tehnologic Liviu Rebreanu" din Mozăceni, Argeș'
+    date: 'December 15, 2025'
+    imageUrl: /Images/Initiatives%20section/IS-2.webp
 stats:
   - number: 6
     label: Students Supported

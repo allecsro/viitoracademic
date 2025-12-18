@@ -22,21 +22,21 @@ aboutContent: >-
   moral și financiar pentru a-și continua studiile superioare. Credem în
   potențialul fiecărui tânăr și lucrăm pentru a-l transforma în oportunități
   reale de dezvoltare academică și profesională.
-aboutImage: /Images/Hero%20section/HS-2.webp
+aboutImage: /Images/About-Mission-Vison%20Section/AS.webp
 missionTitle: Misiune
 missionContent: >-
   VIITOR ACADEMIC își propune să elimine barierele care limitează accesul la
   educație superioară. Prin programe educaționale, consiliere, burse și sprijin
   activ, ajutăm tinerii talentați să își descopere vocația, să își continue
   parcursul educațional și să se integreze cu succes pe piața muncii.
-missionImage: /Images/Hero%20section/HS-3.webp
+missionImage: /Images/About-Mission-Vison%20Section/MS.webp
 visionTitle: Viziune
 visionContent: >-
   Visăm la o societate în care fiecare tânăr, indiferent de mediul din care
   provine, are șansa de a studia, de a visa și de a se dezvolta. Credem într-o
   educație echitabilă, accesibilă tuturor, și într-un viitor academic în care
   talentul, nu situația socială, trasează drumul unui student.
-visionImage: /Images/Hero%20section/HS-1.webp
+visionImage: /Images/About-Mission-Vison%20Section/VS.webp
 projectsTitle: Proiectele noastre
 projectsSubtitle: Programe gândite pentru a susține și împuternici tinerii
 projects:
@@ -57,18 +57,21 @@ projects:
       profesionale.
   - title: Burse și sprijin financiar
     description: >-
-      Stimulente și asistență financiară pentru studenții cu rezultate
-      academice excelente, astfel încât lipsurile materiale să nu le limiteze
-      potențialul.
+      Stimulente și asistență financiară pentru studenții cu rezultate academice
+      excelente, astfel încât lipsurile materiale să nu le limiteze potențialul.
 initiativesTitle: Inițiativele noastre
 initiativesSubtitle: >-
   Descoperă inițiativele prin care susținem și împuternicim tinerii din diverse
   comunități și regiuni.
 initiatives:
-  - title: Atelier - „Importanța educației”
+  - title: Atelier - "Importanța educației"
     location: '"Liceul Tehnologic Liviu Rebreanu" din Mozăceni, Argeș'
-    date: '05 decembrie 2025'
+    date: 05 Decembrie 2025
     imageUrl: /Images/Initiatives%20section/IS-1.webp
+  - title: Acordare Burse "Viitor Academic"
+    location: '"Liceul Tehnologic Liviu Rebreanu" din Mozăceni, Argeș'
+    date: 15 Decembrie 2025
+    imageUrl: /Images/Initiatives%20section/IS-2.webp
 stats:
   - number: 6
     label: Tineri sprijiniți
@@ -97,7 +100,5 @@ contactEmail: mireamarian@gmail.com
 contactPhone: 0721014857
 donationButtonText: Descarcă formularul de donație
 donationButtonLink: /Forms/RO Donation form.pdf
-_template: home
 ---
-
 
